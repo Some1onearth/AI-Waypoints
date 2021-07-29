@@ -15,32 +15,27 @@ public class WaypointAI : MonoBehaviour
 
     //homework: once it has reached the goal move towards a second goal
     [SerializeField] private float speed = 1f; //camelCasing
-    [SerializeField] private GameObject goal;
-    [SerializeField] private GameObject goal1;
-    [SerializeField] private GameObject goal2;
-    [SerializeField] private float distanceCutoff;
-    //float speed = 1f;
+    [SerializeField] private GameObject[] goal;
+    private int goalIndex = 0;
+    private GameObject currentGoal;
 
     // Start is called before the first frame update
     void Start()
     {
-        goal = goal1;
-        distanceCutoff = 0.01f;
-        speed = 5.0f;
-         
+        currentGoal = goal[goalIndex]; 
     }
 
     // Update is called once per frame
     void Update()
     {
         //this gets the distance to the goal
-        float distance = Vector2.Distance(transform.position, goal.transform.position);
+        float distance = Vector2.Distance(transform.position, currentGoal.transform.position);
 
-        if(distance > distanceCutoff)
+        if(distance > 0.01f)
 
         {
             //finds the direction to goal (to the circle)
-            Vector2 direction = (goal.transform.position - transform.position).normalized;
+            Vector2 direction = (currentGoal.transform.position - transform.position).normalized;
             Vector2 position = transform.position;
             //moves ai towards the direction set (which was the goal)
             position += (direction * speed * Time.deltaTime);
@@ -48,8 +43,21 @@ public class WaypointAI : MonoBehaviour
         }
         else
         {
-            goal = goal2;
-        }
+            //Increase goalIndex by 1 (all 3 work the same)
+            //goalIndex = goalIndex + 1;
+            //goalIndex += 1;
+            goalIndex++;
+
+
+            //goal.Length = 3
+            //goalIndex >= goal.Length)
+            if (goalIndex > goal.Length - 1)
+            {
+                goalIndex = 0;
+            }
+
+            currentGoal = goal[goalIndex];
+        }           
     }
 }
 
