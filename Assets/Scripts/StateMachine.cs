@@ -5,7 +5,8 @@ using UnityEngine;
 public enum State
 {
     Wander,
-    Stop
+    Stop,
+    Flash
 }
 public class StateMachine : MonoBehaviour
 {
@@ -39,6 +40,19 @@ public class StateMachine : MonoBehaviour
         NextState();
     }
 
+    private IEnumerator FlashState()
+    {
+        Debug.Log("Stop: Enter");
+        sprite.color = Color.blue;
+        sprite.color = Color.cyan;
+        while (state == State.Flash)
+        {
+            waypointAI.isAIMoving = false;
+            yield return null; //come back the next frame
+        }
+        Debug.Log("Stop: Exit");
+        NextState();
+    }
     private void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
@@ -50,7 +64,7 @@ public class StateMachine : MonoBehaviour
         waypointAI = GetComponent<WaypointAI>();
         if(waypointAI == null)
         {
-            Debug.LogError("Hey me, sprite is null, there is no SpriteRenderer on this object");
+            Debug.LogError("Hey me, Waypoint is null, there is no SpriteRenderer on this object");
         }
         NextState();
     }
@@ -66,6 +80,9 @@ public class StateMachine : MonoBehaviour
                 break;
             case State.Stop:
                 StartCoroutine(StopState());
+                break;
+            case State.Flash:
+                StartCoroutine(FlashState());
                 break;
             default:
                 StartCoroutine(StopState());
