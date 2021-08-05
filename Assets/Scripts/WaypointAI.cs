@@ -19,6 +19,9 @@ public class WaypointAI : MonoBehaviour
     private int goalIndex = 0;
     private GameObject currentGoal;
 
+    public bool isAIMoving = true;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,10 +31,15 @@ public class WaypointAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(isAIMoving == false)
+        {
+            return; //exit the method early
+        }
+
         //this gets the distance to the goal
         float distance = Vector2.Distance(transform.position, currentGoal.transform.position);
 
-        if(distance > 0.01f)
+        if(distance > 0.05f)
 
         {
             //finds the direction to goal (to the circle)

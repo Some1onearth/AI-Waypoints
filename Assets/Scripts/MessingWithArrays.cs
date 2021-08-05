@@ -11,7 +11,7 @@ public class MessingWithArrays : MonoBehaviour
     void Start()
     {
 
-        Debug.Log( myStringArray[x] );
+        //Debug.Log( myStringArray[x] );
 
 
         myStringArray[x] = "Whatever I want";
