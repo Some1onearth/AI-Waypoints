@@ -592,6 +592,7 @@ GameObject:
   - component: {fileID: 1750905971}
   - component: {fileID: 1750905970}
   - component: {fileID: 1750905969}
+  - component: {fileID: 1750905972}
   m_Layer: 0
   m_Name: AI Agent
   m_TagString: Untagged
@@ -619,6 +620,7 @@ MonoBehaviour:
   - {fileID: 1684545493}
   - {fileID: 1557756137}
   - {fileID: 2126866352}
+  isAIMoving: 1
 --- !u!212 &1750905970
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -660,7 +662,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.105882354, b: 0.9340668, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -684,6 +686,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1750905972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1750905968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 276d5dd411cdc8848aa2fd3f37fbc731, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 2
 --- !u!1 &1781295412
 GameObject:
   m_ObjectHideFlags: 0

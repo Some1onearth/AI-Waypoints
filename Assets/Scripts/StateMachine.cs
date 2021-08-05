@@ -43,11 +43,11 @@ public class StateMachine : MonoBehaviour
     private IEnumerator FlashState()
     {
         Debug.Log("Stop: Enter");
-        sprite.color = Color.blue;
+        //change the alpha and 
         sprite.color = Color.cyan;
         while (state == State.Flash)
         {
-            waypointAI.isAIMoving = false;
+            waypointAI.isAIMoving = true;
             yield return null; //come back the next frame
         }
         Debug.Log("Stop: Exit");
