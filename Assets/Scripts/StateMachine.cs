@@ -47,6 +47,11 @@ public class StateMachine : MonoBehaviour
         sprite.color = Color.cyan;
         while (state == State.Flash)
         {
+            sprite.color = Color.white;
+            yield return new WaitForSeconds(0.1f);
+            sprite.color = Color.cyan;
+            yield return new WaitForSeconds(0.1f);
+
             waypointAI.isAIMoving = true;
             yield return null; //come back the next frame
         }
