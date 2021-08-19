@@ -10,10 +10,10 @@ public enum State
 }
 public class StateMachine : MonoBehaviour
 {
-    [SerializeField] private State state;
+    public State state;
 
     private SpriteRenderer sprite = null;
-    private WaypointAI waypointAI = null;
+    private WaypointAI waypointAI = null;// null is not necessary as it usually starts off null
     private IEnumerator WanderState()
     {
         Debug.Log("Wander: Enter");
