@@ -4,23 +4,25 @@ using UnityEngine;
 
 public class WaypointAI : MonoBehaviour
 {
+    #region Notes
     /*
-     //these are all variables
-     //we can store data in it
-     int x;                      // counting, stats, lives, health, ammo
+    //these are all variables
+    //we can store data in it
+    int x;                      // counting, stats, lives, health, ammo
      float y;                    //health, sliders, energy levels, stamina, mana, stats, per second, movement speed, attack speed
      string theseAreWords = "33" + "onfaosnsnlfkdwn" + "12"; //players name, display numbers,
      bool trueOrFalse;           //true or false
     */
-
+    #endregion
     //homework: once it has reached the goal move towards a second goal
-    [SerializeField] private float speed = 1f; //camelCasing
+    [SerializeField] public float speed = 1f; //camelCasing
     [SerializeField] private GameObject[] goal;
     private int goalIndex = 0;
     private GameObject currentGoal;
 
     public bool isAIMoving = true;
 
+    public GameObject target;
 
     // Start is called before the first frame update
     void Start()
@@ -35,37 +37,55 @@ public class WaypointAI : MonoBehaviour
         {
             return; //exit the method early
         }
-
-        //this gets the distance to the goal
-        float distance = Vector2.Distance(transform.position, currentGoal.transform.position);
-
-        if(distance > 0.05f)
-
+        if(target == null)
         {
-            //finds the direction to goal (to the circle)
-            Vector2 direction = (currentGoal.transform.position - transform.position).normalized;
-            Vector2 position = transform.position;
-            //moves ai towards the direction set (which was the goal)
-            position += (direction * speed * Time.deltaTime);
-            transform.position = position;
+            Wander(currentGoal, speed);
         }
         else
         {
-            //Increase goalIndex by 1 (all 3 work the same)
-            //goalIndex = goalIndex + 1;
-            //goalIndex += 1;
-            goalIndex++;
+            Chase(target, speed);
+        }
+    }
+    void Chase(GameObject goal, float currentSpeed) //placing the variables makes it transferable.
+    {
+        //finds the direction to goal (to the circle)
+        Vector2 direction = (goal.transform.position - transform.position).normalized;
+
+        Vector2 position = transform.position;
+        //moves ai towards the direction set (which was the goal)
+        position += (direction * currentSpeed * Time.deltaTime);
+        transform.position = position;
+    }
+    void Wander(GameObject goal, float currentSpeed)
+    {
+        //this gets the distance to the goal
+        float distance = Vector2.Distance(transform.position, goal.transform.position);
+
+        if (distance > 0.05f)
+        {
+            Chase(goal, currentSpeed); //passing along the floats
+        }
+        else
+        {
+            NextGoal();
+        }
+    }
+    void NextGoal()
+    {
+        //Increase goalIndex by 1 (all 3 work the same)
+        //goalIndex = goalIndex + 1;
+        //goalIndex += 1;
+        goalIndex++;
 
 
-            //goal.Length = 3
-            //goalIndex >= goal.Length)
-            if (goalIndex > goal.Length - 1)
-            {
-                goalIndex = 0;
-            }
+        //goal.Length = 3
+        //goalIndex >= goal.Length)
+        if (goalIndex > goal.Length - 1)
+        {
+            goalIndex = 0;
+        }
 
-            currentGoal = goal[goalIndex];
-        }           
+        currentGoal = goal[goalIndex];
     }
 }
 
