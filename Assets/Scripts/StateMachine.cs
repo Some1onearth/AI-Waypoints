@@ -8,6 +8,7 @@ public enum State
     Stop,
     Flash,
     Chase,
+    FlashChase,
 }
 public class StateMachine : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class StateMachine : MonoBehaviour
 
     private SpriteRenderer sprite = null;
     private WaypointAI waypointAI = null;// null is not necessary as it usually starts off null
-
     private GameObject player;
     #endregion
     private IEnumerator WanderState()
@@ -25,7 +25,7 @@ public class StateMachine : MonoBehaviour
         Debug.Log("Wander: Enter");
         sprite.color = Color.green;
         waypointAI.isAIMoving = true;
-
+        waypointAI.isAIFlashing = false;
         while (state == State.Wander)
         {
             float distance = Vector2.Distance(transform.position, player.transform.position);
@@ -71,18 +71,26 @@ public class StateMachine : MonoBehaviour
 
     private IEnumerator FlashState()
     {
-        Debug.Log("Stop: Enter");
+        Debug.Log("Flash: Enter");
         //change the alpha and 
         sprite.color = Color.cyan;
         while (state == State.Flash)
         {
+            waypointAI.isAIFlashing = true;
             waypointAI.isAIMoving = true;
             yield return null; //come back the next frame
 
             sprite.color = Color.white;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
             sprite.color = Color.cyan;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.05f);
+            
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+
+            if (distance < chaseDistance && player.activeSelf == true) // && both sides have to be true
+            {
+                state = State.FlashChase;
+            }
         }
         Debug.Log("Stop: Exit");
         NextState();
@@ -110,6 +118,42 @@ public class StateMachine : MonoBehaviour
                 state = State.Stop;
             }
             
+            yield return null; //come back the next frame
+        }
+
+        waypointAI.target = null;
+        Debug.Log("Stop: Exit");
+        NextState();
+    }
+    private IEnumerator FlashChaseState()
+    {
+        //0 - 1              //R    G    B   Alpha/Transparency
+        Debug.Log("FlashChase: Enter");
+        sprite.color = new Color(0.7f, 0, 1, 1);
+        while (state == State.FlashChase)
+        {
+
+            waypointAI.target = player;
+
+            sprite.color = Color.white;
+            yield return new WaitForSeconds(0.05f);
+            sprite.color = new Color(0.7f, 0, 1, 1);
+            yield return new WaitForSeconds(0.05f);
+
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+
+            if (distance < waypointAI.speed * Time.deltaTime) // && both sides have to be true
+            {
+                player.SetActive(false);
+                state = State.Flash;
+            }
+
+            if (distance > chaseDistance)//leaves the player alone after the distance further than chaseDistance (5f)
+            {
+                state = State.Stop;
+                waypointAI.isAIFlashing = false;
+            }
+
             yield return null; //come back the next frame
         }
 
@@ -158,6 +202,9 @@ public class StateMachine : MonoBehaviour
                 break;
             case State.Chase:
                 StartCoroutine(ChaseState());
+                break;
+            case State.FlashChase:
+                StartCoroutine(FlashChaseState());
                 break;
             default:
                 StartCoroutine(StopState());

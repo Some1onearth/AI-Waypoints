@@ -17,17 +17,23 @@ public class WaypointAI : MonoBehaviour
     //homework: once it has reached the goal move towards a second goal
     [SerializeField] public float speed = 1f; //camelCasing
     [SerializeField] private GameObject[] goal;
+    [SerializeField] private GameObject[] goal2;
     private int goalIndex = 0;
+    private int goalIndex2 = 0;
+
     private GameObject currentGoal;
+    private GameObject currentGoal2;
 
     public bool isAIMoving = true;
+    public bool isAIFlashing = false;
 
     public GameObject target;
 
     // Start is called before the first frame update
     void Start()
     {
-        currentGoal = goal[goalIndex]; 
+        currentGoal = goal[goalIndex];
+        currentGoal2 = goal2[goalIndex2];
     }
 
     // Update is called once per frame
@@ -37,13 +43,20 @@ public class WaypointAI : MonoBehaviour
         {
             return; //exit the method early
         }
-        if(target == null)
+        if (isAIFlashing == true)
         {
-            Wander(currentGoal, speed);
+            Flash(currentGoal2, speed);
         }
         else
         {
-            Chase(target, speed);
+            if (target == null)
+            {
+                Wander(currentGoal, speed);
+            }
+            else
+            {
+                Chase(target, speed);
+            }
         }
     }
     void Chase(GameObject goal, float currentSpeed) //placing the variables makes it transferable.
@@ -70,6 +83,22 @@ public class WaypointAI : MonoBehaviour
             NextGoal();
         }
     }
+    void Flash(GameObject goal2, float currentSpeed) //placing the variables makes it transferable.
+    {
+        float distance = Vector2.Distance(transform.position, goal2.transform.position);
+
+        if (distance > 0.05f)
+        {
+            Vector2 direction = (goal2.transform.position - transform.position).normalized;
+            Vector2 position = transform.position;
+            position += (direction * currentSpeed * Time.deltaTime);
+            transform.position = position;
+        }
+        else
+        {
+            NextGoal2();
+        }
+    }
     void NextGoal()
     {
         //Increase goalIndex by 1 (all 3 work the same)
@@ -86,6 +115,23 @@ public class WaypointAI : MonoBehaviour
         }
 
         currentGoal = goal[goalIndex];
+    }
+    void NextGoal2()
+    {
+        //Increase goalIndex by 1 (all 3 work the same)
+        //goalIndex = goalIndex + 1;
+        //goalIndex += 1;
+        goalIndex2++;
+
+
+        //goal.Length = 3
+        //goalIndex >= goal.Length)
+        if (goalIndex2 > goal2.Length - 1)
+        {
+            goalIndex2 = 0;
+        }
+
+        currentGoal2 = goal2[goalIndex2];
     }
 }
 
